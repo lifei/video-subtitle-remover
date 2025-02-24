@@ -19,6 +19,8 @@ import platform
 import cv2
 import numpy as np
 import paddle
+
+import paddle.base
 from PIL import Image, ImageDraw, ImageFont
 import math
 from paddle import inference
@@ -42,10 +44,10 @@ def init_args():
 
     # params for text detector
     parser.add_argument("--image_dir", type=str)
-    parser.add_argument("--det_algorithm", type=str, default='DB')
+    parser.add_argument("--det_algorithm", type=str, default="DB")
     parser.add_argument("--det_model_dir", type=str)
     parser.add_argument("--det_limit_side_len", type=float, default=960)
-    parser.add_argument("--det_limit_type", type=str, default='max')
+    parser.add_argument("--det_limit_type", type=str, default="max")
 
     # DB parmas
     parser.add_argument("--det_db_thresh", type=float, default=0.3)
@@ -68,7 +70,7 @@ def init_args():
     parser.add_argument("--det_pse_thresh", type=float, default=0)
     parser.add_argument("--det_pse_box_thresh", type=float, default=0.85)
     parser.add_argument("--det_pse_min_area", type=float, default=16)
-    parser.add_argument("--det_pse_box_type", type=str, default='quad')
+    parser.add_argument("--det_pse_box_type", type=str, default="quad")
     parser.add_argument("--det_pse_scale", type=int, default=1)
 
     # FCE parmas
@@ -76,41 +78,40 @@ def init_args():
     parser.add_argument("--alpha", type=float, default=1.0)
     parser.add_argument("--beta", type=float, default=1.0)
     parser.add_argument("--fourier_degree", type=int, default=5)
-    parser.add_argument("--det_fce_box_type", type=str, default='poly')
+    parser.add_argument("--det_fce_box_type", type=str, default="poly")
 
     # params for text recognizer
-    parser.add_argument("--rec_algorithm", type=str, default='CRNN')
+    parser.add_argument("--rec_algorithm", type=str, default="CRNN")
     parser.add_argument("--rec_model_dir", type=str)
     parser.add_argument("--rec_image_shape", type=str, default="3, 48, 320")
     parser.add_argument("--rec_batch_num", type=int, default=6)
     parser.add_argument("--max_text_length", type=int, default=25)
     parser.add_argument(
-        "--rec_char_dict_path",
-        type=str,
-        default="./ppocr/utils/ppocr_keys_v1.txt")
+        "--rec_char_dict_path", type=str, default="./ppocr/utils/ppocr_keys_v1.txt"
+    )
     parser.add_argument("--use_space_char", type=str2bool, default=True)
-    parser.add_argument(
-        "--vis_font_path", type=str, default="./doc/fonts/simfang.ttf")
+    parser.add_argument("--vis_font_path", type=str, default="./doc/fonts/simfang.ttf")
     parser.add_argument("--drop_score", type=float, default=0.5)
 
     # params for e2e
-    parser.add_argument("--e2e_algorithm", type=str, default='PGNet')
+    parser.add_argument("--e2e_algorithm", type=str, default="PGNet")
     parser.add_argument("--e2e_model_dir", type=str)
     parser.add_argument("--e2e_limit_side_len", type=float, default=768)
-    parser.add_argument("--e2e_limit_type", type=str, default='max')
+    parser.add_argument("--e2e_limit_type", type=str, default="max")
 
     # PGNet parmas
     parser.add_argument("--e2e_pgnet_score_thresh", type=float, default=0.5)
     parser.add_argument(
-        "--e2e_char_dict_path", type=str, default="./ppocr/utils/ic15_dict.txt")
-    parser.add_argument("--e2e_pgnet_valid_set", type=str, default='totaltext')
-    parser.add_argument("--e2e_pgnet_mode", type=str, default='fast')
+        "--e2e_char_dict_path", type=str, default="./ppocr/utils/ic15_dict.txt"
+    )
+    parser.add_argument("--e2e_pgnet_valid_set", type=str, default="totaltext")
+    parser.add_argument("--e2e_pgnet_mode", type=str, default="fast")
 
     # params for text classifier
     parser.add_argument("--use_angle_cls", type=str2bool, default=False)
     parser.add_argument("--cls_model_dir", type=str)
     parser.add_argument("--cls_image_shape", type=str, default="3, 48, 192")
-    parser.add_argument("--label_list", type=list, default=['0', '180'])
+    parser.add_argument("--label_list", type=list, default=["0", "180"])
     parser.add_argument("--cls_batch_num", type=int, default=6)
     parser.add_argument("--cls_thresh", type=float, default=0.9)
 
@@ -120,8 +121,7 @@ def init_args():
     parser.add_argument("--warmup", type=str2bool, default=False)
 
     #
-    parser.add_argument(
-        "--draw_img_save_dir", type=str, default="./inference_results")
+    parser.add_argument("--draw_img_save_dir", type=str, default="./inference_results")
     parser.add_argument("--save_crop_res", type=str2bool, default=False)
     parser.add_argument("--crop_res_save_dir", type=str, default="./output")
 
@@ -146,11 +146,11 @@ def parse_args():
 def create_predictor(args, mode, logger):
     if mode == "det":
         model_dir = args.det_model_dir
-    elif mode == 'cls':
+    elif mode == "cls":
         model_dir = args.cls_model_dir
-    elif mode == 'rec':
+    elif mode == "rec":
         model_dir = args.rec_model_dir
-    elif mode == 'table':
+    elif mode == "table":
         model_dir = args.table_model_dir
     else:
         model_dir = args.e2e_model_dir
@@ -160,26 +160,24 @@ def create_predictor(args, mode, logger):
         sys.exit(0)
     if args.use_onnx:
         import onnxruntime as ort
+
         model_file_path = model_dir
         if not os.path.exists(model_file_path):
-            raise ValueError("not find model file path {}".format(
-                model_file_path))
+            raise ValueError("not find model file path {}".format(model_file_path))
         sess = ort.InferenceSession(model_file_path)
         return sess, sess.get_inputs()[0], None, None
 
     else:
         model_file_path = model_dir + "/inference.pdmodel"
-        params_file_path = model_dir + "/inference.pdiparams"
+        params_file_path = model_dir + "/inference.pdiparams.info"
         if not os.path.exists(model_file_path):
-            raise ValueError("not find model file path {}".format(
-                model_file_path))
+            raise ValueError("not find model file path {}".format(model_file_path))
         if not os.path.exists(params_file_path):
-            raise ValueError("not find params file path {}".format(
-                params_file_path))
+            raise ValueError("not find params file path {}".format(params_file_path))
 
         config = inference.Config(model_file_path, params_file_path)
 
-        if hasattr(args, 'precision'):
+        if hasattr(args, "precision"):
             if args.precision == "fp16" and args.use_tensorrt:
                 precision = inference.PrecisionType.Half
             elif args.precision == "int8":
@@ -201,7 +199,8 @@ def create_predictor(args, mode, logger):
                     workspace_size=1 << 30,
                     precision_mode=precision,
                     max_batch_size=args.max_batch_size,
-                    min_subgraph_size=args.min_subgraph_size)
+                    min_subgraph_size=args.min_subgraph_size,
+                )
                 # skip the minmum trt subgraph
             use_dynamic_shape = True
             if mode == "det":
@@ -217,7 +216,7 @@ def create_predictor(args, mode, logger):
                     "nearest_interp_v2_4.tmp_0": [1, 64, 20, 20],
                     "nearest_interp_v2_5.tmp_0": [1, 64, 20, 20],
                     "elementwise_add_7": [1, 56, 2, 2],
-                    "nearest_interp_v2_0.tmp_0": [1, 256, 2, 2]
+                    "nearest_interp_v2_0.tmp_0": [1, 256, 2, 2],
                 }
                 max_input_shape = {
                     "x": [1, 3, 1536, 1536],
@@ -231,7 +230,7 @@ def create_predictor(args, mode, logger):
                     "nearest_interp_v2_4.tmp_0": [1, 64, 400, 400],
                     "nearest_interp_v2_5.tmp_0": [1, 64, 400, 400],
                     "elementwise_add_7": [1, 56, 400, 400],
-                    "nearest_interp_v2_0.tmp_0": [1, 256, 400, 400]
+                    "nearest_interp_v2_0.tmp_0": [1, 256, 400, 400],
                 }
                 opt_input_shape = {
                     "x": [1, 3, 640, 640],
@@ -245,25 +244,25 @@ def create_predictor(args, mode, logger):
                     "nearest_interp_v2_4.tmp_0": [1, 64, 160, 160],
                     "nearest_interp_v2_5.tmp_0": [1, 64, 160, 160],
                     "elementwise_add_7": [1, 56, 40, 40],
-                    "nearest_interp_v2_0.tmp_0": [1, 256, 40, 40]
+                    "nearest_interp_v2_0.tmp_0": [1, 256, 40, 40],
                 }
                 min_pact_shape = {
                     "nearest_interp_v2_26.tmp_0": [1, 256, 20, 20],
                     "nearest_interp_v2_27.tmp_0": [1, 64, 20, 20],
                     "nearest_interp_v2_28.tmp_0": [1, 64, 20, 20],
-                    "nearest_interp_v2_29.tmp_0": [1, 64, 20, 20]
+                    "nearest_interp_v2_29.tmp_0": [1, 64, 20, 20],
                 }
                 max_pact_shape = {
                     "nearest_interp_v2_26.tmp_0": [1, 256, 400, 400],
                     "nearest_interp_v2_27.tmp_0": [1, 64, 400, 400],
                     "nearest_interp_v2_28.tmp_0": [1, 64, 400, 400],
-                    "nearest_interp_v2_29.tmp_0": [1, 64, 400, 400]
+                    "nearest_interp_v2_29.tmp_0": [1, 64, 400, 400],
                 }
                 opt_pact_shape = {
                     "nearest_interp_v2_26.tmp_0": [1, 256, 160, 160],
                     "nearest_interp_v2_27.tmp_0": [1, 64, 160, 160],
                     "nearest_interp_v2_28.tmp_0": [1, 64, 160, 160],
-                    "nearest_interp_v2_29.tmp_0": [1, 64, 160, 160]
+                    "nearest_interp_v2_29.tmp_0": [1, 64, 160, 160],
                 }
                 min_input_shape.update(min_pact_shape)
                 max_input_shape.update(max_pact_shape)
@@ -271,7 +270,7 @@ def create_predictor(args, mode, logger):
             elif mode == "rec":
                 if args.rec_algorithm != "CRNN":
                     use_dynamic_shape = False
-                imgH = int(args.rec_image_shape.split(',')[-2])
+                imgH = int(args.rec_image_shape.split(",")[-2])
                 min_input_shape = {"x": [1, 3, imgH, 10]}
                 max_input_shape = {"x": [args.rec_batch_num, 3, imgH, 1536]}
                 opt_input_shape = {"x": [args.rec_batch_num, 3, imgH, 320]}
@@ -283,7 +282,8 @@ def create_predictor(args, mode, logger):
                 use_dynamic_shape = False
             if use_dynamic_shape:
                 config.set_trt_dynamic_shape_info(
-                    min_input_shape, max_input_shape, opt_input_shape)
+                    min_input_shape, max_input_shape, opt_input_shape
+                )
 
         else:
             config.disable_gpu()
@@ -303,7 +303,7 @@ def create_predictor(args, mode, logger):
         config.disable_glog_info()
         config.delete_pass("conv_transpose_eltwiseadd_bn_fuse_pass")
         config.delete_pass("matmul_transpose_reshape_fuse_pass")
-        if mode == 'table':
+        if mode == "table":
             config.delete_pass("fc_fuse_pass")  # not supported for table
         config.switch_use_feed_fetch_ops(False)
         config.switch_ir_optim(True)
@@ -321,7 +321,7 @@ def get_output_tensors(args, mode, predictor):
     output_names = predictor.get_output_names()
     output_tensors = []
     if mode == "rec" and args.rec_algorithm == "CRNN":
-        output_name = 'softmax_0.tmp_0'
+        output_name = "softmax_0.tmp_0"
         if output_name in output_names:
             return [predictor.get_output_handle(output_name)]
         else:
@@ -340,7 +340,7 @@ def get_infer_gpuid():
     if sysstr == "Windows":
         return 0
 
-    if not paddle.fluid.core.is_compiled_with_rocm():
+    if not paddle.base.is_compiled_with_rocm():
         cmd = "env | grep CUDA_VISIBLE_DEVICES"
     else:
         cmd = "env | grep HIP_VISIBLE_DEVICES"
@@ -364,7 +364,8 @@ def draw_e2e_res(dt_boxes, strs, img_path):
             fontFace=cv2.FONT_HERSHEY_COMPLEX,
             fontScale=0.7,
             color=(0, 255, 0),
-            thickness=1)
+            thickness=1,
+        )
     return src_im
 
 
@@ -388,12 +389,14 @@ def resize_img(img, input_size=600):
     return img
 
 
-def draw_ocr(image,
-             boxes,
-             txts=None,
-             scores=None,
-             drop_score=0.5,
-             font_path="./doc/fonts/simfang.ttf"):
+def draw_ocr(
+    image,
+    boxes,
+    txts=None,
+    scores=None,
+    drop_score=0.5,
+    font_path="./doc/fonts/simfang.ttf",
+):
     """
     Visualize the results of OCR detection and recognition
     args:
@@ -410,8 +413,7 @@ def draw_ocr(image,
         scores = [1] * len(boxes)
     box_num = len(boxes)
     for i in range(box_num):
-        if scores is not None and (scores[i] < drop_score or
-                                   math.isnan(scores[i])):
+        if scores is not None and (scores[i] < drop_score or math.isnan(scores[i])):
             continue
         box = np.reshape(np.array(boxes[i]), [-1, 1, 2]).astype(np.int64)
         image = cv2.polylines(np.array(image), [box], True, (255, 0, 0), 2)
@@ -423,21 +425,19 @@ def draw_ocr(image,
             img_h=img.shape[0],
             img_w=600,
             threshold=drop_score,
-            font_path=font_path)
+            font_path=font_path,
+        )
         img = np.concatenate([np.array(img), np.array(txt_img)], axis=1)
         return img
     return image
 
 
-def draw_ocr_box_txt(image,
-                     boxes,
-                     txts,
-                     scores=None,
-                     drop_score=0.5,
-                     font_path="./doc/simfang.ttf"):
+def draw_ocr_box_txt(
+    image, boxes, txts, scores=None, drop_score=0.5, font_path="./doc/simfang.ttf"
+):
     h, w = image.height, image.width
     img_left = image.copy()
-    img_right = Image.new('RGB', (w, h), (255, 255, 255))
+    img_right = Image.new("RGB", (w, h), (255, 255, 255))
 
     import random
 
@@ -447,35 +447,41 @@ def draw_ocr_box_txt(image,
     for idx, (box, txt) in enumerate(zip(boxes, txts)):
         if scores is not None and scores[idx] < drop_score:
             continue
-        color = (random.randint(0, 255), random.randint(0, 255),
-                 random.randint(0, 255))
+        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         draw_left.polygon(box, fill=color)
         draw_right.polygon(
             [
-                box[0][0], box[0][1], box[1][0], box[1][1], box[2][0],
-                box[2][1], box[3][0], box[3][1]
+                box[0][0],
+                box[0][1],
+                box[1][0],
+                box[1][1],
+                box[2][0],
+                box[2][1],
+                box[3][0],
+                box[3][1],
             ],
-            outline=color)
-        box_height = math.sqrt((box[0][0] - box[3][0])**2 + (box[0][1] - box[3][
-            1])**2)
-        box_width = math.sqrt((box[0][0] - box[1][0])**2 + (box[0][1] - box[1][
-            1])**2)
+            outline=color,
+        )
+        box_height = math.sqrt(
+            (box[0][0] - box[3][0]) ** 2 + (box[0][1] - box[3][1]) ** 2
+        )
+        box_width = math.sqrt(
+            (box[0][0] - box[1][0]) ** 2 + (box[0][1] - box[1][1]) ** 2
+        )
         if box_height > 2 * box_width:
             font_size = max(int(box_width * 0.9), 10)
             font = ImageFont.truetype(font_path, font_size, encoding="utf-8")
             cur_y = box[0][1]
             for c in txt:
                 char_size = font.getsize(c)
-                draw_right.text(
-                    (box[0][0] + 3, cur_y), c, fill=(0, 0, 0), font=font)
+                draw_right.text((box[0][0] + 3, cur_y), c, fill=(0, 0, 0), font=font)
                 cur_y += char_size[1]
         else:
             font_size = max(int(box_height * 0.8), 10)
             font = ImageFont.truetype(font_path, font_size, encoding="utf-8")
-            draw_right.text(
-                [box[0][0], box[0][1]], txt, fill=(0, 0, 0), font=font)
+            draw_right.text([box[0][0], box[0][1]], txt, fill=(0, 0, 0), font=font)
     img_left = Image.blend(image, img_left, 0.5)
-    img_show = Image.new('RGB', (w * 2, h), (255, 255, 255))
+    img_show = Image.new("RGB", (w * 2, h), (255, 255, 255))
     img_show.paste(img_left, (0, 0, w, h))
     img_show.paste(img_right, (w, 0, w * 2, h))
     return np.array(img_show)
@@ -492,6 +498,7 @@ def str_count(s):
         the number of Chinese characters
     """
     import string
+
     count_zh = count_pu = 0
     s_len = len(s)
     en_dg_count = 0
@@ -505,12 +512,9 @@ def str_count(s):
     return s_len - math.ceil(en_dg_count / 2)
 
 
-def text_visual(texts,
-                scores,
-                img_h=400,
-                img_w=600,
-                threshold=0.,
-                font_path="./doc/simfang.ttf"):
+def text_visual(
+    texts, scores, img_h=400, img_w=600, threshold=0.0, font_path="./doc/simfang.ttf"
+):
     """
     create new blank img and draw txt on it
     args:
@@ -522,12 +526,13 @@ def text_visual(texts,
     return(array):
     """
     if scores is not None:
-        assert len(texts) == len(
-            scores), "The number of txts and corresponding scores must match"
+        assert len(texts) == len(scores), (
+            "The number of txts and corresponding scores must match"
+        )
 
     def create_blank_img():
         blank_img = np.ones(shape=[img_h, img_w], dtype=np.int8) * 255
-        blank_img[:, img_w - 1:] = 0
+        blank_img[:, img_w - 1 :] = 0
         blank_img = Image.fromarray(blank_img).convert("RGB")
         draw_txt = ImageDraw.Draw(blank_img)
         return blank_img, draw_txt
@@ -549,23 +554,23 @@ def text_visual(texts,
         first_line = True
         while str_count(txt) >= img_w // font_size - 4:
             tmp = txt
-            txt = tmp[:img_w // font_size - 4]
+            txt = tmp[: img_w // font_size - 4]
             if first_line:
-                new_txt = str(index) + ': ' + txt
+                new_txt = str(index) + ": " + txt
                 first_line = False
             else:
-                new_txt = '    ' + txt
+                new_txt = "    " + txt
             draw_txt.text((0, gap * count), new_txt, txt_color, font=font)
-            txt = tmp[img_w // font_size - 4:]
+            txt = tmp[img_w // font_size - 4 :]
             if count >= img_h // gap - 1:
                 txt_img_list.append(np.array(blank_img))
                 blank_img, draw_txt = create_blank_img()
                 count = 0
             count += 1
         if first_line:
-            new_txt = str(index) + ': ' + txt + '   ' + '%.3f' % (scores[idx])
+            new_txt = str(index) + ": " + txt + "   " + "%.3f" % (scores[idx])
         else:
-            new_txt = "  " + txt + "  " + '%.3f' % (scores[idx])
+            new_txt = "  " + txt + "  " + "%.3f" % (scores[idx])
         draw_txt.text((0, gap * count), new_txt, txt_color, font=font)
         # whether add new blank img or not
         if count >= img_h // gap - 1 and idx + 1 < len(texts):
@@ -583,7 +588,8 @@ def text_visual(texts,
 
 def base64_to_cv2(b64str):
     import base64
-    data = base64.b64decode(b64str.encode('utf8'))
+
+    data = base64.b64decode(b64str.encode("utf8"))
     data = np.fromstring(data, np.uint8)
     data = cv2.imdecode(data, cv2.IMREAD_COLOR)
     return data
@@ -592,7 +598,7 @@ def base64_to_cv2(b64str):
 def draw_boxes(image, boxes, scores=None, drop_score=0.5):
     if scores is None:
         scores = [1] * len(boxes)
-    for (box, score) in zip(boxes, scores):
+    for box, score in zip(boxes, scores):
         if score < drop_score:
             continue
         box = np.reshape(np.array(box), [-1, 1, 2]).astype(np.int64)
@@ -601,7 +607,7 @@ def draw_boxes(image, boxes, scores=None, drop_score=0.5):
 
 
 def get_rotate_crop_image(img, points):
-    '''
+    """
     img_height, img_width = img.shape[0:2]
     left = int(np.min(points[:, 0]))
     right = int(np.max(points[:, 0]))
@@ -610,25 +616,34 @@ def get_rotate_crop_image(img, points):
     img_crop = img[top:bottom, left:right, :].copy()
     points[:, 0] = points[:, 0] - left
     points[:, 1] = points[:, 1] - top
-    '''
+    """
     assert len(points) == 4, "shape of points must be 4*2"
     img_crop_width = int(
         max(
-            np.linalg.norm(points[0] - points[1]),
-            np.linalg.norm(points[2] - points[3])))
+            np.linalg.norm(points[0] - points[1]), np.linalg.norm(points[2] - points[3])
+        )
+    )
     img_crop_height = int(
         max(
-            np.linalg.norm(points[0] - points[3]),
-            np.linalg.norm(points[1] - points[2])))
-    pts_std = np.float32([[0, 0], [img_crop_width, 0],
-                          [img_crop_width, img_crop_height],
-                          [0, img_crop_height]])
+            np.linalg.norm(points[0] - points[3]), np.linalg.norm(points[1] - points[2])
+        )
+    )
+    pts_std = np.float32(
+        [
+            [0, 0],
+            [img_crop_width, 0],
+            [img_crop_width, img_crop_height],
+            [0, img_crop_height],
+        ]
+    )
     M = cv2.getPerspectiveTransform(points, pts_std)
     dst_img = cv2.warpPerspective(
         img,
-        M, (img_crop_width, img_crop_height),
+        M,
+        (img_crop_width, img_crop_height),
         borderMode=cv2.BORDER_REPLICATE,
-        flags=cv2.INTER_CUBIC)
+        flags=cv2.INTER_CUBIC,
+    )
     dst_img_height, dst_img_width = dst_img.shape[0:2]
     if dst_img_height * 1.0 / dst_img_width >= 1.5:
         dst_img = np.rot90(dst_img)
@@ -636,10 +651,10 @@ def get_rotate_crop_image(img, points):
 
 
 def check_gpu(use_gpu):
-    if use_gpu and not paddle.is_compiled_with_cuda():
+    if use_gpu and not paddle.base.is_compiled_with_cuda():
         use_gpu = False
     return use_gpu
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
