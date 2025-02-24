@@ -18,23 +18,23 @@ MODEL_VERSION = "V4"
 DET_MODEL_BASE = os.path.join(BASE_DIR, "models")
 DET_MODEL_PATH = os.path.join(DET_MODEL_BASE, MODEL_VERSION, "ch_det")
 
+# 查看该路径下是否有模型完整文件，没有的话合并小文件生成完整文件
 """
 from fsplit.filesplit import Filesplit
-# 查看该路径下是否有模型完整文件，没有的话合并小文件生成完整文件
-if 'big-lama.pt' not in (os.listdir(LAMA_MODEL_PATH)):
+if "big-lama.pt" not in (os.listdir(LAMA_MODEL_PATH)):
     fs = Filesplit()
     fs.merge(input_dir=LAMA_MODEL_PATH)
 
-if 'inference.pdiparams' not in os.listdir(DET_MODEL_PATH):
+if "inference.pdiparams" not in os.listdir(DET_MODEL_PATH):
     fs = Filesplit()
     fs.merge(input_dir=DET_MODEL_PATH)
 
-if 'ProPainter.pth' not in os.listdir(VIDEO_INPAINT_MODEL_PATH):
+if "ProPainter.pth" not in os.listdir(VIDEO_INPAINT_MODEL_PATH):
     fs = Filesplit()
     fs.merge(input_dir=VIDEO_INPAINT_MODEL_PATH)
-if 'ffmpeg.exe' not in os.listdir(os.path.join(BASE_DIR, '', 'ffmpeg', 'win_x64')):
+if "ffmpeg.exe" not in os.listdir(os.path.join(BASE_DIR, "", "ffmpeg", "win_x64")):
     fs = Filesplit()
-    fs.merge(input_dir=os.path.join(BASE_DIR, '', 'ffmpeg', 'win_x64'))
+    fs.merge(input_dir=os.path.join(BASE_DIR, "", "ffmpeg", "win_x64"))
 """
 
 # 指定ffmpeg可执行程序路径

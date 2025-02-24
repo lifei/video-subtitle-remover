@@ -24,8 +24,6 @@ import paddle.base
 from PIL import Image, ImageDraw, ImageFont
 import math
 from paddle import inference
-import time
-from ppocr.utils.logging import get_logger
 
 
 def str2bool(v):
@@ -169,7 +167,7 @@ def create_predictor(args, mode, logger):
 
     else:
         model_file_path = model_dir + "/inference.pdmodel"
-        params_file_path = model_dir + "/inference.pdiparams.info"
+        params_file_path = model_dir + "/inference.pdiparams"
         if not os.path.exists(model_file_path):
             raise ValueError("not find model file path {}".format(model_file_path))
         if not os.path.exists(params_file_path):
