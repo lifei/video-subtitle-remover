@@ -1,0 +1,6 @@
+from _typeshed import Incomplete
+from paddle import framework as framework
+from paddle.base import data_feeder as data_feeder
+
+def alltoall(out_tensor_or_tensor_list, in_tensor_or_tensor_list, group: Incomplete | None = None, sync_op: bool = True, use_calc_stream: bool = False): ...
+def alltoall_single(out_tensor, in_tensor, out_split_sizes: Incomplete | None = None, in_split_sizes: Incomplete | None = None, group: Incomplete | None = None, sync_op: bool = True, use_calc_stream: bool = False): ...

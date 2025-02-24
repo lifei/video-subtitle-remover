@@ -1,0 +1,9 @@
+from _typeshed import Incomplete
+from paddle.base.data_feeder import check_variable_and_dtype as check_variable_and_dtype
+from paddle.base.framework import Variable as Variable, in_dygraph_mode as in_dygraph_mode, in_pir_mode as in_pir_mode
+from paddle.base.layer_helper import LayerHelper as LayerHelper
+from paddle.nn.initializer import ConstantInitializer as ConstantInitializer
+
+def accuracy(input, label, k: int = 1, correct: Incomplete | None = None, total: Incomplete | None = None): ...
+def auc(input, label, curve: str = 'ROC', num_thresholds=..., topk: int = 1, slide_steps: int = 1, ins_tag_weight: Incomplete | None = None): ...
+def ctr_metric_bundle(input, label, ins_tag_weight: Incomplete | None = None): ...

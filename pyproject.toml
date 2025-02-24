@@ -1,0 +1,9 @@
+[tool.basedpyright]
+venv = ".venv"
+typeCheckingMode = "basic"
+stubPath = "./stubs"
+
+[tool.pyright]
+venv = ".venv"
+typeCheckingMode = "basic"
+stubPath = "./stubs"

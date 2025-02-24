@@ -1,0 +1,6 @@
+from .controller import ControleMode as ControleMode, Controller as Controller
+
+class RpcController(Controller):
+    @classmethod
+    def enable(cls, ctx): ...
+    def build_pod(self) -> None: ...

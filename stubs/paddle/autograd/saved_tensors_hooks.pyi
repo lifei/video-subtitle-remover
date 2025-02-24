@@ -1,0 +1,9 @@
+from _typeshed import Incomplete
+from paddle.base import core as core
+
+class saved_tensors_hooks:
+    pack_hook: Incomplete
+    unpack_hook: Incomplete
+    def __init__(self, pack_hook, unpack_hook) -> None: ...
+    def __enter__(self) -> None: ...
+    def __exit__(self, *args) -> None: ...

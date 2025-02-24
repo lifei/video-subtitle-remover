@@ -1,0 +1,6 @@
+from .collective import CollectiveLauncher as CollectiveLauncher
+from .manager import ELASTIC_EXIT_CODE as ELASTIC_EXIT_CODE, ElasticLevel as ElasticLevel, ElasticManager as ElasticManager, ElasticStatus as ElasticStatus
+from paddle.distributed.fleet.launch_utils import DistributeMode as DistributeMode
+
+def enable_elastic(args, distribute_mode): ...
+def launch_elastic(args, distribute_mode) -> None: ...

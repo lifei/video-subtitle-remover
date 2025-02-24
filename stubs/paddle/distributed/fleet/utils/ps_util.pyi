@@ -1,0 +1,9 @@
+from _typeshed import Incomplete
+
+class DistributedInfer:
+    origin_main_program: Incomplete
+    origin_startup_program: Incomplete
+    sparse_table_maps: Incomplete
+    def __init__(self, main_program: Incomplete | None = None, startup_program: Incomplete | None = None) -> None: ...
+    def init_distributed_infer_env(self, exe, loss, role_maker: Incomplete | None = None, dirname: Incomplete | None = None) -> None: ...
+    def get_dist_infer_program(self): ...

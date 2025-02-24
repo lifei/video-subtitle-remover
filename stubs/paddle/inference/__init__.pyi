@@ -1,0 +1,4 @@
+from .wrapper import Config as Config, DataType as DataType, PlaceType as PlaceType, PrecisionType as PrecisionType, Predictor as Predictor, Tensor as Tensor, convert_to_mixed_precision as convert_to_mixed_precision
+from paddle.base.core import PredictorPool as PredictorPool, XpuConfig as XpuConfig, _get_phi_kernel_name as _get_phi_kernel_name, create_predictor as create_predictor, get_num_bytes_of_data_type as get_num_bytes_of_data_type, get_trt_compile_version as get_trt_compile_version, get_trt_runtime_version as get_trt_runtime_version, get_version as get_version
+
+__all__ = ['Config', 'DataType', 'PlaceType', 'PrecisionType', 'Tensor', 'Predictor', 'create_predictor', 'get_version', '_get_phi_kernel_name', 'get_trt_compile_version', 'convert_to_mixed_precision', 'get_trt_runtime_version', 'get_num_bytes_of_data_type', 'PredictorPool', 'XpuConfig']

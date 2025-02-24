@@ -1,0 +1,3 @@
+from paddle.base.layer_helper import LayerHelper as LayerHelper
+
+def fused_ec_moe(x, gate, bmm0_weight, bmm0_bias, bmm1_weight, bmm1_bias, act_type): ...

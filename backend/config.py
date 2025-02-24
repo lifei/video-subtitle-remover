@@ -1,26 +1,25 @@
-import warnings
 from enum import Enum, unique
-warnings.filterwarnings('ignore')
+
 import os
 import torch
 import logging
 import platform
 import stat
-from fsplit.filesplit import Filesplit
-import paddle
+
 # ×××××××××××××××××××× [不要改] start ××××××××××××××××××××
-paddle.disable_signal_handler()
 logging.disable(logging.DEBUG)  # 关闭DEBUG日志的打印
 logging.disable(logging.WARNING)  # 关闭WARNING日志的打印
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LAMA_MODEL_PATH = os.path.join(BASE_DIR, 'models', 'big-lama')
-STTN_MODEL_PATH = os.path.join(BASE_DIR, 'models', 'sttn', 'infer_model.pth')
-VIDEO_INPAINT_MODEL_PATH = os.path.join(BASE_DIR, 'models', 'video')
-MODEL_VERSION = 'V4'
-DET_MODEL_BASE = os.path.join(BASE_DIR, 'models')
-DET_MODEL_PATH = os.path.join(DET_MODEL_BASE, MODEL_VERSION, 'ch_det')
+LAMA_MODEL_PATH = os.path.join(BASE_DIR, "models", "big-lama")
+STTN_MODEL_PATH = os.path.join(BASE_DIR, "models", "sttn", "infer_model.pth")
+VIDEO_INPAINT_MODEL_PATH = os.path.join(BASE_DIR, "models", "video")
+MODEL_VERSION = "V4"
+DET_MODEL_BASE = os.path.join(BASE_DIR, "models")
+DET_MODEL_PATH = os.path.join(DET_MODEL_BASE, MODEL_VERSION, "ch_det")
 
+"""
+from fsplit.filesplit import Filesplit
 # 查看该路径下是否有模型完整文件，没有的话合并小文件生成完整文件
 if 'big-lama.pt' not in (os.listdir(LAMA_MODEL_PATH)):
     fs = Filesplit()
@@ -33,23 +32,24 @@ if 'inference.pdiparams' not in os.listdir(DET_MODEL_PATH):
 if 'ProPainter.pth' not in os.listdir(VIDEO_INPAINT_MODEL_PATH):
     fs = Filesplit()
     fs.merge(input_dir=VIDEO_INPAINT_MODEL_PATH)
+if 'ffmpeg.exe' not in os.listdir(os.path.join(BASE_DIR, '', 'ffmpeg', 'win_x64')):
+    fs = Filesplit()
+    fs.merge(input_dir=os.path.join(BASE_DIR, '', 'ffmpeg', 'win_x64'))
+"""
 
 # 指定ffmpeg可执行程序路径
 sys_str = platform.system()
 if sys_str == "Windows":
-    ffmpeg_bin = os.path.join('win_x64', 'ffmpeg.exe')
+    ffmpeg_bin = os.path.join("win_x64", "ffmpeg.exe")
 elif sys_str == "Linux":
-    ffmpeg_bin = os.path.join('linux_x64', 'ffmpeg')
+    ffmpeg_bin = os.path.join("linux_x64", "ffmpeg")
 else:
-    ffmpeg_bin = os.path.join('macos', 'ffmpeg')
-FFMPEG_PATH = os.path.join(BASE_DIR, '', 'ffmpeg', ffmpeg_bin)
+    ffmpeg_bin = os.path.join("macos", "ffmpeg")
+FFMPEG_PATH = os.path.join(BASE_DIR, "", "ffmpeg", ffmpeg_bin)
 
-if 'ffmpeg.exe' not in os.listdir(os.path.join(BASE_DIR, '', 'ffmpeg', 'win_x64')):
-    fs = Filesplit()
-    fs.merge(input_dir=os.path.join(BASE_DIR, '', 'ffmpeg', 'win_x64'))
 # 将ffmpeg添加可执行权限
 os.chmod(FFMPEG_PATH, stat.S_IRWXU + stat.S_IRWXG + stat.S_IRWXO)
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 # ×××××××××××××××××××× [不要改] end ××××××××××××××××××××
 
 
@@ -58,9 +58,10 @@ class InpaintMode(Enum):
     """
     图像重绘算法枚举
     """
-    STTN = 'sttn'
-    LAMA = 'lama'
-    PROPAINTER = 'propainter'
+
+    STTN = "sttn"
+    LAMA = "lama"
+    PROPAINTER = "propainter"
 
 
 # ×××××××××××××××××××× [可以改] start ××××××××××××××××××××
@@ -131,3 +132,4 @@ PROPAINTER_MAX_LOAD_NUM = 70
 LAMA_SUPER_FAST = False
 # ×××××××××× InpaintMode.LAMA算法设置 end ××××××××××
 # ×××××××××××××××××××× [可以改] end ××××××××××××××××××××
+UNITE_COORDINATES = False

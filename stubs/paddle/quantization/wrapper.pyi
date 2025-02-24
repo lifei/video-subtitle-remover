@@ -1,0 +1,6 @@
+from .base_quanter import BaseQuanter as BaseQuanter
+from paddle.nn import Layer as Layer
+
+class ObserveWrapper(Layer):
+    def __init__(self, observer: BaseQuanter, observed: Layer, observe_input: bool = True) -> None: ...
+    def forward(self, *inputs, **kwargs): ...

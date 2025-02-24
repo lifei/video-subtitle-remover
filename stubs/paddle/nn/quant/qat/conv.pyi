@@ -1,0 +1,13 @@
+from ...layer.layers import Layer as Layer
+from ..format import ConvertibleQuantedLayer as ConvertibleQuantedLayer
+from _typeshed import Incomplete
+
+class QuantedConv2D(ConvertibleQuantedLayer):
+    weight: Incomplete
+    bias: Incomplete
+    weight_quanter: Incomplete
+    activation_quanter: Incomplete
+    def __init__(self, layer: Layer, q_config) -> None: ...
+    def forward(self, input): ...
+    def weights_to_quanters(self): ...
+    def activation_quanters(self): ...

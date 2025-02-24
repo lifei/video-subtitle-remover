@@ -1,0 +1,2 @@
+from paddle.common_ops_import import check_variable_and_dtype as check_variable_and_dtype
+from paddle.framework import LayerHelper as LayerHelper, in_dynamic_mode as in_dynamic_mode

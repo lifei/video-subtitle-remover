@@ -1,0 +1,19 @@
+from ...base.data_feeder import check_dtype as check_dtype, check_variable_and_dtype as check_variable_and_dtype
+from ...base.layer_helper import LayerHelper as LayerHelper
+from ...common_ops_import import Variable as Variable
+from ...device import get_cudnn_version as get_cudnn_version
+from ...framework import no_grad as no_grad
+from ...tensor.manipulation import squeeze as squeeze, unsqueeze as unsqueeze
+from ...utils import convert_to_list as convert_to_list
+from _typeshed import Incomplete
+from paddle import get_flags as get_flags, in_dynamic_mode as in_dynamic_mode, pir as pir
+from paddle.base.framework import in_dynamic_or_pir_mode as in_dynamic_or_pir_mode
+from paddle.device import get_all_custom_device_type as get_all_custom_device_type, is_compiled_with_cuda as is_compiled_with_cuda, is_compiled_with_rocm as is_compiled_with_rocm
+from paddle.tensor.manipulation import reshape as reshape
+
+def conv1d(x, weight, bias: Incomplete | None = None, stride: int = 1, padding: int = 0, dilation: int = 1, groups: int = 1, data_format: str = 'NCL', name: Incomplete | None = None): ...
+def conv2d(x, weight, bias: Incomplete | None = None, stride: int = 1, padding: int = 0, dilation: int = 1, groups: int = 1, data_format: str = 'NCHW', name: Incomplete | None = None): ...
+def conv1d_transpose(x, weight, bias: Incomplete | None = None, stride: int = 1, padding: int = 0, output_padding: int = 0, groups: int = 1, dilation: int = 1, output_size: Incomplete | None = None, data_format: str = 'NCL', name: Incomplete | None = None): ...
+def conv2d_transpose(x, weight, bias: Incomplete | None = None, stride: int = 1, padding: int = 0, output_padding: int = 0, dilation: int = 1, groups: int = 1, output_size: Incomplete | None = None, data_format: str = 'NCHW', name: Incomplete | None = None): ...
+def conv3d(x, weight, bias: Incomplete | None = None, stride: int = 1, padding: int = 0, dilation: int = 1, groups: int = 1, data_format: str = 'NCDHW', name: Incomplete | None = None): ...
+def conv3d_transpose(x, weight, bias: Incomplete | None = None, stride: int = 1, padding: int = 0, output_padding: int = 0, groups: int = 1, dilation: int = 1, output_size: Incomplete | None = None, data_format: str = 'NCDHW', name: Incomplete | None = None): ...

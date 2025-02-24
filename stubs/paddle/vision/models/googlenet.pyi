@@ -1,0 +1,26 @@
+from _typeshed import Incomplete
+from paddle import nn as nn
+from paddle.base.param_attr import ParamAttr as ParamAttr
+from paddle.nn import AdaptiveAvgPool2D as AdaptiveAvgPool2D, AvgPool2D as AvgPool2D, Conv2D as Conv2D, Dropout as Dropout, Linear as Linear, MaxPool2D as MaxPool2D
+from paddle.nn.initializer import Uniform as Uniform
+from paddle.utils.download import get_weights_path_from_url as get_weights_path_from_url
+
+model_urls: Incomplete
+
+def xavier(channels, filter_size): ...
+
+class ConvLayer(nn.Layer):
+    def __init__(self, num_channels, num_filters, filter_size, stride: int = 1, groups: int = 1) -> None: ...
+    def forward(self, inputs): ...
+
+class Inception(nn.Layer):
+    def __init__(self, input_channels, output_channels, filter1, filter3R, filter3, filter5R, filter5, proj) -> None: ...
+    def forward(self, inputs): ...
+
+class GoogLeNet(nn.Layer):
+    num_classes: Incomplete
+    with_pool: Incomplete
+    def __init__(self, num_classes: int = 1000, with_pool: bool = True) -> None: ...
+    def forward(self, inputs): ...
+
+def googlenet(pretrained: bool = False, **kwargs): ...

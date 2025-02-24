@@ -1,0 +1,76 @@
+from _typeshed import Incomplete
+from paddle.autograd import PyLayer as PyLayer
+from paddle.base import core as core
+from paddle.distributed import fleet as fleet
+from paddle.distributed.fleet.meta_parallel import get_rng_state_tracker as get_rng_state_tracker
+from paddle.distributed.fleet.utils.hybrid_parallel_util import fused_allreduce_gradients_with_group as fused_allreduce_gradients_with_group
+from paddle.nn import Layer as Layer
+
+def scatter(input): ...
+def all_gather(input): ...
+def reduce_scatter(input): ...
+
+class ScatterOp(PyLayer):
+    @staticmethod
+    def forward(ctx, input): ...
+    @staticmethod
+    def backward(ctx, grad): ...
+
+class GatherOp(PyLayer):
+    @staticmethod
+    def forward(ctx, input): ...
+    @staticmethod
+    def backward(ctx, grad): ...
+
+class AllGatherOp(PyLayer):
+    @staticmethod
+    def forward(ctx, input): ...
+    @staticmethod
+    def backward(ctx, grad): ...
+
+class ReduceScatterOp(PyLayer):
+    @staticmethod
+    def forward(ctx, input): ...
+    @staticmethod
+    def backward(ctx, grad): ...
+
+def mark_as_sequence_parallel_parameter(parameter) -> None: ...
+def is_sequence_parallel_parameter(parameter): ...
+def create_fused_allreduce_gradient_hook(parameter_list, accumulation_steps): ...
+def create_non_fused_allreduce_gradient_hook(param, accumulation_steps): ...
+def register_sequence_parallel_allreduce_hooks(model, accumulation_steps, fuse_sequence_parallel_allreduce) -> None: ...
+def is_fused_matmul_bias_supported(): ...
+
+class ColumnSequenceParallelLinear(Layer):
+    model_parallel_group: Incomplete
+    world_size: Incomplete
+    is_mp: Incomplete
+    gather_output: Incomplete
+    output_size_per_partition: Incomplete
+    weight: Incomplete
+    bias: Incomplete
+    linear: Incomplete
+    def __init__(self, in_features, out_features, weight_attr: Incomplete | None = None, has_bias: Incomplete | None = None, gather_output: bool = True, fuse_matmul_bias: bool = False, mp_group: Incomplete | None = None, name: Incomplete | None = None) -> None: ...
+    def forward(self, x): ...
+
+class MPScale(PyLayer):
+    @staticmethod
+    def forward(ctx, x, mp_degree): ...
+    @staticmethod
+    def backward(ctx, dout): ...
+
+class RowSequenceParallelLinear(Layer):
+    in_features: Incomplete
+    out_features: Incomplete
+    input_is_parallel: Incomplete
+    model_parallel_group: Incomplete
+    world_size: Incomplete
+    rank: Incomplete
+    is_mp: Incomplete
+    input_size_per_partition: Incomplete
+    weight: Incomplete
+    bias: Incomplete
+    linear: Incomplete
+    mp_scale: Incomplete
+    def __init__(self, in_features, out_features, weight_attr: Incomplete | None = None, has_bias: bool = True, input_is_parallel: bool = False, fuse_matmul_bias: bool = False, mp_group: Incomplete | None = None, name: Incomplete | None = None) -> None: ...
+    def forward(self, x): ...

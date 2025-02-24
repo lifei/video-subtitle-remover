@@ -1,0 +1,3 @@
+from _typeshed import Incomplete
+
+def setup_logger(output: Incomplete | None = None, name: str = 'hapi', log_level=...): ...

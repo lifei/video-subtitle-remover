@@ -1,0 +1,19 @@
+from paddle.utils import deprecated as deprecated
+
+URL_DEV_TEST: str
+MD5_DEV_TEST: str
+URL_TRAIN: str
+MD5_TRAIN: str
+URL_MODEL: str
+MD5_MODEL: str
+START: str
+END: str
+UNK: str
+UNK_IDX: int
+
+def reader_creator(tar_file, file_name, dict_size): ...
+def train(dict_size): ...
+def test(dict_size): ...
+def gen(dict_size): ...
+def get_dict(dict_size, reverse: bool = True): ...
+def fetch() -> None: ...

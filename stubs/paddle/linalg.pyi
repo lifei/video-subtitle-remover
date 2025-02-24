@@ -1,0 +1,4 @@
+from .tensor import inverse as inv
+from .tensor.linalg import cholesky as cholesky, cholesky_solve as cholesky_solve, cond as cond, corrcoef as corrcoef, cov as cov, det as det, eig as eig, eigh as eigh, eigvals as eigvals, eigvalsh as eigvalsh, householder_product as householder_product, lstsq as lstsq, lu as lu, lu_unpack as lu_unpack, matrix_power as matrix_power, matrix_rank as matrix_rank, multi_dot as multi_dot, norm as norm, pca_lowrank as pca_lowrank, pinv as pinv, qr as qr, slogdet as slogdet, solve as solve, svd as svd, triangular_solve as triangular_solve
+
+__all__ = ['cholesky', 'norm', 'cond', 'cov', 'corrcoef', 'inv', 'eig', 'eigvals', 'multi_dot', 'matrix_rank', 'svd', 'qr', 'householder_product', 'pca_lowrank', 'lu', 'lu_unpack', 'matrix_power', 'det', 'slogdet', 'eigh', 'eigvalsh', 'pinv', 'solve', 'cholesky_solve', 'triangular_solve', 'lstsq']

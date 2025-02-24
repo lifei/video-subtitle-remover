@@ -1,0 +1,23 @@
+from _typeshed import Incomplete
+
+class TrainerDesc:
+    proto_desc: Incomplete
+    def __init__(self) -> None: ...
+
+class MultiTrainer(TrainerDesc):
+    def __init__(self) -> None: ...
+
+class DistMultiTrainer(TrainerDesc):
+    def __init__(self) -> None: ...
+
+class HeterXpuTrainer(TrainerDesc):
+    def __init__(self) -> None: ...
+
+class PSGPUTrainer(TrainerDesc):
+    def __init__(self) -> None: ...
+
+class HeterPipelineTrainer(TrainerDesc):
+    def __init__(self) -> None: ...
+
+class PipelineTrainer(TrainerDesc):
+    def __init__(self) -> None: ...

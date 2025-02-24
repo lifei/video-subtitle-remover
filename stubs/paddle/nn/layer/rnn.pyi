@@ -1,0 +1,109 @@
+from .container import LayerList as LayerList
+from .layers import Layer as Layer
+from _typeshed import Incomplete
+from paddle import framework as framework, in_dynamic_mode as in_dynamic_mode
+from paddle.base.data_feeder import check_type as check_type, check_variable_and_dtype as check_variable_and_dtype
+from paddle.base.dygraph.base import NON_PERSISTABLE_VAR_NAME_SUFFIX as NON_PERSISTABLE_VAR_NAME_SUFFIX
+from paddle.base.framework import default_startup_program as default_startup_program, in_dygraph_mode as in_dygraph_mode, program_guard as program_guard
+from paddle.common_ops_import import Variable as Variable
+from paddle.framework import core as core
+from paddle.tensor.manipulation import tensor_array_to_tensor as tensor_array_to_tensor
+
+def rnn(cell, inputs, initial_states: Incomplete | None = None, sequence_length: Incomplete | None = None, time_major: bool = False, is_reverse: bool = False, **kwargs): ...
+
+class ArrayWrapper:
+    array: Incomplete
+    def __init__(self, x) -> None: ...
+    def append(self, x): ...
+    def __getitem__(self, item): ...
+
+def birnn(cell_fw, cell_bw, inputs, initial_states: Incomplete | None = None, sequence_length: Incomplete | None = None, time_major: bool = False, **kwargs): ...
+def split_states(states, bidirectional: bool = False, state_components: int = 1): ...
+def concat_states(states, bidirectional: bool = False, state_components: int = 1): ...
+
+class RNNCellBase(Layer):
+    shape: Incomplete
+    def get_initial_states(self, batch_ref, shape: Incomplete | None = None, dtype: Incomplete | None = None, init_value: float = 0.0, batch_dim_idx: int = 0): ...
+    @property
+    def state_shape(self) -> None: ...
+    @property
+    def state_dtype(self) -> None: ...
+
+class SimpleRNNCell(RNNCellBase):
+    weight_ih: Incomplete
+    weight_hh: Incomplete
+    bias_ih: Incomplete
+    bias_hh: Incomplete
+    input_size: Incomplete
+    hidden_size: Incomplete
+    activation: Incomplete
+    def __init__(self, input_size, hidden_size, activation: str = 'tanh', weight_ih_attr: Incomplete | None = None, weight_hh_attr: Incomplete | None = None, bias_ih_attr: Incomplete | None = None, bias_hh_attr: Incomplete | None = None, name: Incomplete | None = None) -> None: ...
+    def forward(self, inputs, states: Incomplete | None = None): ...
+    @property
+    def state_shape(self): ...
+    def extra_repr(self): ...
+
+class LSTMCell(RNNCellBase):
+    weight_ih: Incomplete
+    weight_hh: Incomplete
+    bias_ih: Incomplete
+    bias_hh: Incomplete
+    hidden_size: Incomplete
+    input_size: Incomplete
+    def __init__(self, input_size, hidden_size, weight_ih_attr: Incomplete | None = None, weight_hh_attr: Incomplete | None = None, bias_ih_attr: Incomplete | None = None, bias_hh_attr: Incomplete | None = None, name: Incomplete | None = None) -> None: ...
+    def forward(self, inputs, states: Incomplete | None = None): ...
+    @property
+    def state_shape(self): ...
+    def extra_repr(self): ...
+
+class GRUCell(RNNCellBase):
+    weight_ih: Incomplete
+    weight_hh: Incomplete
+    bias_ih: Incomplete
+    bias_hh: Incomplete
+    hidden_size: Incomplete
+    input_size: Incomplete
+    def __init__(self, input_size, hidden_size, weight_ih_attr: Incomplete | None = None, weight_hh_attr: Incomplete | None = None, bias_ih_attr: Incomplete | None = None, bias_hh_attr: Incomplete | None = None, name: Incomplete | None = None) -> None: ...
+    def forward(self, inputs, states: Incomplete | None = None): ...
+    @property
+    def state_shape(self): ...
+    def extra_repr(self): ...
+
+class RNN(Layer):
+    cell: Incomplete
+    is_reverse: Incomplete
+    time_major: Incomplete
+    def __init__(self, cell, is_reverse: bool = False, time_major: bool = False) -> None: ...
+    def forward(self, inputs, initial_states: Incomplete | None = None, sequence_length: Incomplete | None = None, **kwargs): ...
+
+class BiRNN(Layer):
+    cell_fw: Incomplete
+    cell_bw: Incomplete
+    time_major: Incomplete
+    def __init__(self, cell_fw, cell_bw, time_major: bool = False) -> None: ...
+    def forward(self, inputs, initial_states: Incomplete | None = None, sequence_length: Incomplete | None = None, **kwargs): ...
+
+class RNNBase(LayerList):
+    mode: Incomplete
+    input_size: Incomplete
+    hidden_size: Incomplete
+    dropout: Incomplete
+    num_directions: Incomplete
+    time_major: Incomplete
+    num_layers: Incomplete
+    state_components: Incomplete
+    could_use_cudnn: bool
+    def __init__(self, mode, input_size, hidden_size, num_layers: int = 1, direction: str = 'forward', time_major: bool = False, dropout: float = 0.0, weight_ih_attr: Incomplete | None = None, weight_hh_attr: Incomplete | None = None, bias_ih_attr: Incomplete | None = None, bias_hh_attr: Incomplete | None = None) -> None: ...
+    def flatten_parameters(self) -> None: ...
+    def forward(self, inputs, initial_states: Incomplete | None = None, sequence_length: Incomplete | None = None): ...
+    def extra_repr(self): ...
+
+class SimpleRNN(RNNBase):
+    activation: Incomplete
+    def __init__(self, input_size, hidden_size, num_layers: int = 1, direction: str = 'forward', time_major: bool = False, dropout: float = 0.0, activation: str = 'tanh', weight_ih_attr: Incomplete | None = None, weight_hh_attr: Incomplete | None = None, bias_ih_attr: Incomplete | None = None, bias_hh_attr: Incomplete | None = None, name: Incomplete | None = None) -> None: ...
+
+class LSTM(RNNBase):
+    def __init__(self, input_size, hidden_size, num_layers: int = 1, direction: str = 'forward', time_major: bool = False, dropout: float = 0.0, weight_ih_attr: Incomplete | None = None, weight_hh_attr: Incomplete | None = None, bias_ih_attr: Incomplete | None = None, bias_hh_attr: Incomplete | None = None, name: Incomplete | None = None) -> None: ...
+
+class GRU(RNNBase):
+    def __init__(self, input_size, hidden_size, num_layers: int = 1, direction: str = 'forward', time_major: bool = False, dropout: float = 0.0, weight_ih_attr: Incomplete | None = None, weight_hh_attr: Incomplete | None = None, bias_ih_attr: Incomplete | None = None, bias_hh_attr: Incomplete | None = None, name: Incomplete | None = None) -> None: ...

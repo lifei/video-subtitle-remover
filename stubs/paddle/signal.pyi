@@ -1,0 +1,6 @@
+from _typeshed import Incomplete
+
+__all__ = ['stft', 'istft']
+
+def stft(x, n_fft, hop_length: Incomplete | None = None, win_length: Incomplete | None = None, window: Incomplete | None = None, center: bool = True, pad_mode: str = 'reflect', normalized: bool = False, onesided: bool = True, name: Incomplete | None = None): ...
+def istft(x, n_fft, hop_length: Incomplete | None = None, win_length: Incomplete | None = None, window: Incomplete | None = None, center: bool = True, normalized: bool = False, onesided: bool = True, length: Incomplete | None = None, return_complex: bool = False, name: Incomplete | None = None): ...

@@ -1,0 +1,36 @@
+from _typeshed import Incomplete
+from paddle.io import Dataset as Dataset
+from paddle.utils import try_import as try_import
+
+def has_valid_extension(filename, extensions): ...
+def make_dataset(dir, class_to_idx, extensions, is_valid_file: Incomplete | None = None): ...
+
+class DatasetFolder(Dataset):
+    root: Incomplete
+    transform: Incomplete
+    loader: Incomplete
+    extensions: Incomplete
+    classes: Incomplete
+    class_to_idx: Incomplete
+    samples: Incomplete
+    targets: Incomplete
+    dtype: Incomplete
+    def __init__(self, root, loader: Incomplete | None = None, extensions: Incomplete | None = None, transform: Incomplete | None = None, is_valid_file: Incomplete | None = None) -> None: ...
+    def __getitem__(self, index): ...
+    def __len__(self) -> int: ...
+
+IMG_EXTENSIONS: Incomplete
+
+def pil_loader(path): ...
+def cv2_loader(path): ...
+def default_loader(path): ...
+
+class ImageFolder(Dataset):
+    root: Incomplete
+    loader: Incomplete
+    extensions: Incomplete
+    samples: Incomplete
+    transform: Incomplete
+    def __init__(self, root, loader: Incomplete | None = None, extensions: Incomplete | None = None, transform: Incomplete | None = None, is_valid_file: Incomplete | None = None) -> None: ...
+    def __getitem__(self, index): ...
+    def __len__(self) -> int: ...

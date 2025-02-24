@@ -1,0 +1,36 @@
+import abc
+from .utils import gbs_search_all as gbs_search_all, load_configs_from_csv as load_configs_from_csv, search_all as search_all, search_by_dp_estimation as search_by_dp_estimation
+from _typeshed import Incomplete
+from abc import ABC, abstractmethod
+
+class SearchAlgo(ABC, metaclass=abc.ABCMeta):
+    tuner_cfg: Incomplete
+    def __init__(self, tuner_cfg) -> None: ...
+    @abstractmethod
+    def search_once(self, history_cfgs): ...
+    def prune(self, tuner_cfg, cur_cfg, history_cfgs): ...
+
+class GridSearch(SearchAlgo):
+    idx: int
+    all_tasks: Incomplete
+    def __init__(self, tuner_cfg) -> None: ...
+    def search_once(self, history_cfgs): ...
+
+class DpEstimationSearch(SearchAlgo):
+    idx: int
+    all_tasks: Incomplete
+    def __init__(self, tuner_cfg) -> None: ...
+    def search_once(self, history_cfgs): ...
+
+class GBSSearch(SearchAlgo):
+    idx: int
+    all_tasks: Incomplete
+    def __init__(self, tuner_cfg) -> None: ...
+    def search_once(self, history_cfgs): ...
+
+class CustomizeSearch(SearchAlgo):
+    idx: int
+    configs_csv: Incomplete
+    all_tasks: Incomplete
+    def __init__(self, tuner_cfg) -> None: ...
+    def search_once(self, history_cfgs): ...

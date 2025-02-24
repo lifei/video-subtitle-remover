@@ -1,0 +1,4 @@
+from . import core as core
+from .math_op_patch import monkey_patch_value as monkey_patch_value
+from .program_patch import monkey_patch_program as monkey_patch_program
+from paddle.base.libpaddle.pir import Block as Block, OpOperand as OpOperand, OpResult as OpResult, Operation as Operation, PassManager as PassManager, Program as Program, Type as Type, Value as Value, check_unregistered_ops as check_unregistered_ops, fake_op_result as fake_op_result, is_fake_op_result as is_fake_op_result, parse_program as parse_program, register_paddle_dialect as register_paddle_dialect, reset_insertion_point_to_end as reset_insertion_point_to_end, reset_insertion_point_to_start as reset_insertion_point_to_start, set_global_program as set_global_program, set_insertion_point as set_insertion_point, translate_to_pir as translate_to_pir, translate_to_pir_with_param_map as translate_to_pir_with_param_map

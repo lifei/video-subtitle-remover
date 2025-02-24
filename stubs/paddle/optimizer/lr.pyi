@@ -1,0 +1,149 @@
+from _typeshed import Incomplete
+
+__all__ = ['LRScheduler', 'NoamDecay', 'PiecewiseDecay', 'NaturalExpDecay', 'InverseTimeDecay', 'PolynomialDecay', 'LinearWarmup', 'ExponentialDecay', 'MultiStepDecay', 'StepDecay', 'LambdaDecay', 'ReduceOnPlateau', 'CosineAnnealingDecay', 'MultiplicativeDecay', 'OneCycleLR', 'CyclicLR', 'LinearLR', 'CosineAnnealingWarmRestarts']
+
+class LRScheduler:
+    base_lr: Incomplete
+    last_lr: Incomplete
+    last_epoch: Incomplete
+    verbose: Incomplete
+    def __init__(self, learning_rate: float = 0.1, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def __call__(self): ...
+    def step(self, epoch: Incomplete | None = None) -> None: ...
+    def state_dict(self): ...
+    keys: Incomplete
+    def state_keys(self) -> None: ...
+    def set_state_dict(self, state_dict) -> None: ...
+    set_dict = set_state_dict
+    def get_lr(self) -> None: ...
+
+class NoamDecay(LRScheduler):
+    d_model: Incomplete
+    warmup_steps: Incomplete
+    def __init__(self, d_model, warmup_steps, learning_rate: float = 1.0, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class PiecewiseDecay(LRScheduler):
+    boundaries: Incomplete
+    values: Incomplete
+    def __init__(self, boundaries, values, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class NaturalExpDecay(LRScheduler):
+    gamma: Incomplete
+    def __init__(self, learning_rate, gamma, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class InverseTimeDecay(LRScheduler):
+    gamma: Incomplete
+    def __init__(self, learning_rate, gamma, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class PolynomialDecay(LRScheduler):
+    decay_steps: Incomplete
+    end_lr: Incomplete
+    power: Incomplete
+    cycle: Incomplete
+    def __init__(self, learning_rate, decay_steps, end_lr: float = 0.0001, power: float = 1.0, cycle: bool = False, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class LinearWarmup(LRScheduler):
+    learning_rate: Incomplete
+    warmup_steps: Incomplete
+    start_lr: Incomplete
+    end_lr: Incomplete
+    def __init__(self, learning_rate, warmup_steps, start_lr, end_lr, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def state_dict(self): ...
+    def set_state_dict(self, state_dict) -> None: ...
+    def get_lr(self): ...
+
+class ExponentialDecay(LRScheduler):
+    gamma: Incomplete
+    def __init__(self, learning_rate, gamma, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class MultiStepDecay(LRScheduler):
+    milestones: Incomplete
+    gamma: Incomplete
+    def __init__(self, learning_rate, milestones, gamma: float = 0.1, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class StepDecay(LRScheduler):
+    step_size: Incomplete
+    gamma: Incomplete
+    def __init__(self, learning_rate, step_size, gamma: float = 0.1, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class LambdaDecay(LRScheduler):
+    lr_lambda: Incomplete
+    def __init__(self, learning_rate, lr_lambda, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class ReduceOnPlateau(LRScheduler):
+    mode: Incomplete
+    factor: Incomplete
+    threshold_mode: Incomplete
+    patience: Incomplete
+    threshold: Incomplete
+    cooldown: Incomplete
+    min_lr: Incomplete
+    epsilon: Incomplete
+    cooldown_counter: int
+    best: Incomplete
+    num_bad_epochs: int
+    base_lr: Incomplete
+    last_lr: Incomplete
+    last_epoch: int
+    verbose: Incomplete
+    def __init__(self, learning_rate, mode: str = 'min', factor: float = 0.1, patience: int = 10, threshold: float = 0.0001, threshold_mode: str = 'rel', cooldown: int = 0, min_lr: int = 0, epsilon: float = 1e-08, verbose: bool = False) -> None: ...
+    keys: Incomplete
+    def state_keys(self) -> None: ...
+    def step(self, metrics, epoch: Incomplete | None = None) -> None: ...
+
+class CosineAnnealingDecay(LRScheduler):
+    T_max: Incomplete
+    eta_min: Incomplete
+    def __init__(self, learning_rate, T_max, eta_min: int = 0, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class MultiplicativeDecay(LRScheduler):
+    lr_lambda: Incomplete
+    def __init__(self, learning_rate, lr_lambda, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class OneCycleLR(LRScheduler):
+    total_steps: Incomplete
+    anneal_func: Incomplete
+    def __init__(self, max_learning_rate, total_steps, divide_factor: float = 25.0, end_learning_rate: float = 0.0001, phase_pct: float = 0.3, anneal_strategy: str = 'cos', three_phase: bool = False, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class CyclicLR(LRScheduler):
+    cycle_size: Incomplete
+    step_up_pct: Incomplete
+    max_lr: Incomplete
+    amplitude: Incomplete
+    mode: Incomplete
+    gamma: Incomplete
+    scale_fn: Incomplete
+    scale_mode: str
+    def __init__(self, base_learning_rate, max_learning_rate, step_size_up, step_size_down: Incomplete | None = None, mode: str = 'triangular', exp_gamma: float = 1.0, scale_fn: Incomplete | None = None, scale_mode: str = 'cycle', last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class LinearLR(LRScheduler):
+    start_factor: Incomplete
+    end_factor: Incomplete
+    total_steps: Incomplete
+    def __init__(self, learning_rate, total_steps, start_factor=..., end_factor: float = 1.0, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+
+class CosineAnnealingWarmRestarts(LRScheduler):
+    T_0: Incomplete
+    T_i: Incomplete
+    T_mult: Incomplete
+    eta_min: Incomplete
+    T_cur: Incomplete
+    def __init__(self, learning_rate, T_0, T_mult: int = 1, eta_min: int = 0, last_epoch: int = -1, verbose: bool = False) -> None: ...
+    def get_lr(self): ...
+    last_epoch: Incomplete
+    last_lr: Incomplete
+    def step(self, epoch: Incomplete | None = None) -> None: ...

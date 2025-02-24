@@ -1,0 +1,9 @@
+import graphviz
+from .tracker import DummyTracker as DummyTracker
+from .variables import VariableBase as VariableBase
+
+SIR_GRAPH_CLUSTER_NAME: str
+
+def try_import_graphviz(): ...
+def draw_variable(graph: graphviz.Digraph, var: VariableBase): ...
+def view_tracker(root_variables: list[VariableBase], filename: str, format: str): ...

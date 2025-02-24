@@ -1,0 +1,3 @@
+from .instruction_pass import apply_instr_pass as apply_instr_pass
+from .instruction_utils import Instruction as Instruction, calc_offset_from_bytecode_offset as calc_offset_from_bytecode_offset, calc_stack_effect as calc_stack_effect, convert_instruction as convert_instruction, gen_instr as gen_instr, get_instructions as get_instructions, instrs_info as instrs_info, modify_extended_args as modify_extended_args, modify_instrs as modify_instrs, modify_vars as modify_vars, relocate_jump_target as relocate_jump_target, replace_instr as replace_instr, reset_offset as reset_offset
+from .opcode_analysis import Space as Space, analysis_inputs as analysis_inputs, analysis_used_names_with_space as analysis_used_names_with_space

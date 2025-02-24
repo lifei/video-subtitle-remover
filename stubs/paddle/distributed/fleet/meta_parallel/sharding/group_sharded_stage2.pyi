@@ -1,0 +1,19 @@
+from .group_sharded_optimizer_stage2 import GroupShardedOptimizerStage2 as GroupShardedOptimizerStage2
+from .group_sharded_storage import GradStorage as GradStorage
+from .group_sharded_utils import Type as Type, device_guard as device_guard
+from _typeshed import Incomplete
+from paddle import nn as nn
+from paddle.distributed import collective as collective
+from paddle.distributed.utils.log_utils import get_logger as get_logger
+
+logger_: Incomplete
+
+class GroupShardedStage2(nn.Layer):
+    use_main_grad: Incomplete
+    scale_in_opt: bool
+    def __init__(self, layer, sharding_optimizer, group: Incomplete | None = None, sync_buffers: bool = False, buffer_max_size=..., auto_refresh_trainable: bool = True, device: str = 'gpu', dp_group: Incomplete | None = None) -> None: ...
+    def forward(self, *inputs, **kwargs): ...
+    def set_state_dict(self, state_dict, use_structured_name: bool = True) -> None: ...
+    def state_dict(self, destination: Incomplete | None = None, include_sublayers: bool = True, structured_name_prefix: str = ''): ...
+    def to(self, device: Incomplete | None = None, dtype: Incomplete | None = None, blocking: bool = True) -> None: ...
+    def __getattr__(self, name): ...

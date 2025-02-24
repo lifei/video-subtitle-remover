@@ -1,0 +1,13 @@
+from _typeshed import Incomplete
+
+class IrGuard:
+    in_dygraph_outside: bool
+    old_Program: Incomplete
+    old_program_guard: Incomplete
+    old_default_main_program: Incomplete
+    old_default_startup_program: Incomplete
+    def __init__(self) -> None: ...
+    def __enter__(self) -> None: ...
+    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: types.TracebackType | None) -> None: ...
+
+def test_with_pir_api(func): ...

@@ -1,0 +1,3 @@
+__all__ = ['save_for_auto_inference']
+
+def save_for_auto_inference(path_prefix, dist_model, cvt2cpu: bool = False) -> None: ...

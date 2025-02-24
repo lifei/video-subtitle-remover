@@ -1,0 +1,6 @@
+from _typeshed import Incomplete
+from paddle.common_ops_import import check_variable_and_dtype as check_variable_and_dtype
+from paddle.framework import LayerHelper as LayerHelper, in_dynamic_mode as in_dynamic_mode
+
+def global_scatter(x, local_count, global_count, group: Incomplete | None = None, use_calc_stream: bool = True): ...
+def global_gather(x, local_count, global_count, group: Incomplete | None = None, use_calc_stream: bool = True): ...

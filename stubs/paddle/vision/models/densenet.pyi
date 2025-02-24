@@ -1,0 +1,56 @@
+from _typeshed import Incomplete
+from paddle import nn as nn
+from paddle.base.param_attr import ParamAttr as ParamAttr
+from paddle.nn import AdaptiveAvgPool2D as AdaptiveAvgPool2D, AvgPool2D as AvgPool2D, BatchNorm as BatchNorm, Conv2D as Conv2D, Dropout as Dropout, Linear as Linear, MaxPool2D as MaxPool2D
+from paddle.nn.initializer import Uniform as Uniform
+from paddle.utils.download import get_weights_path_from_url as get_weights_path_from_url
+
+model_urls: Incomplete
+
+class BNACConvLayer(nn.Layer):
+    def __init__(self, num_channels, num_filters, filter_size, stride: int = 1, pad: int = 0, groups: int = 1, act: str = 'relu') -> None: ...
+    def forward(self, input): ...
+
+class DenseLayer(nn.Layer):
+    dropout: Incomplete
+    bn_ac_func1: Incomplete
+    bn_ac_func2: Incomplete
+    dropout_func: Incomplete
+    def __init__(self, num_channels, growth_rate, bn_size, dropout) -> None: ...
+    def forward(self, input): ...
+
+class DenseBlock(nn.Layer):
+    dropout: Incomplete
+    dense_layer_func: Incomplete
+    def __init__(self, num_channels, num_layers, bn_size, growth_rate, dropout, name: Incomplete | None = None) -> None: ...
+    def forward(self, input): ...
+
+class TransitionLayer(nn.Layer):
+    conv_ac_func: Incomplete
+    pool2d_avg: Incomplete
+    def __init__(self, num_channels, num_output_features) -> None: ...
+    def forward(self, input): ...
+
+class ConvBNLayer(nn.Layer):
+    def __init__(self, num_channels, num_filters, filter_size, stride: int = 1, pad: int = 0, groups: int = 1, act: str = 'relu') -> None: ...
+    def forward(self, input): ...
+
+class DenseNet(nn.Layer):
+    num_classes: Incomplete
+    with_pool: Incomplete
+    conv1_func: Incomplete
+    pool2d_max: Incomplete
+    block_config: Incomplete
+    dense_block_func_list: Incomplete
+    transition_func_list: Incomplete
+    batch_norm: Incomplete
+    pool2d_avg: Incomplete
+    out: Incomplete
+    def __init__(self, layers: int = 121, bn_size: int = 4, dropout: float = 0.0, num_classes: int = 1000, with_pool: bool = True) -> None: ...
+    def forward(self, input): ...
+
+def densenet121(pretrained: bool = False, **kwargs): ...
+def densenet161(pretrained: bool = False, **kwargs): ...
+def densenet169(pretrained: bool = False, **kwargs): ...
+def densenet201(pretrained: bool = False, **kwargs): ...
+def densenet264(pretrained: bool = False, **kwargs): ...

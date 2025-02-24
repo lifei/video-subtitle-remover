@@ -1,0 +1,23 @@
+from _typeshed import Incomplete
+from paddle import nn as nn
+from paddle.utils.download import get_weights_path_from_url as get_weights_path_from_url
+
+model_urls: Incomplete
+
+class VGG(nn.Layer):
+    features: Incomplete
+    num_classes: Incomplete
+    with_pool: Incomplete
+    avgpool: Incomplete
+    classifier: Incomplete
+    def __init__(self, features, num_classes: int = 1000, with_pool: bool = True) -> None: ...
+    def forward(self, x): ...
+
+def make_layers(cfg, batch_norm: bool = False): ...
+
+cfgs: Incomplete
+
+def vgg11(pretrained: bool = False, batch_norm: bool = False, **kwargs): ...
+def vgg13(pretrained: bool = False, batch_norm: bool = False, **kwargs): ...
+def vgg16(pretrained: bool = False, batch_norm: bool = False, **kwargs): ...
+def vgg19(pretrained: bool = False, batch_norm: bool = False, **kwargs): ...

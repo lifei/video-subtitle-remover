@@ -1,0 +1,6 @@
+from _typeshed import Incomplete
+
+__all__ = ['sparse_coo_tensor', 'sparse_csr_tensor']
+
+def sparse_coo_tensor(indices, values, shape: Incomplete | None = None, dtype: Incomplete | None = None, place: Incomplete | None = None, stop_gradient: bool = True): ...
+def sparse_csr_tensor(crows, cols, values, shape, dtype: Incomplete | None = None, place: Incomplete | None = None, stop_gradient: bool = True): ...

@@ -1,0 +1,16 @@
+from _typeshed import Incomplete
+from paddle.base import core as core, unique_name as unique_name
+from paddle.base.executor import global_scope as global_scope
+from paddle.base.framework import Variable as Variable, name_scope as name_scope
+from paddle.base.layer_helper import LayerHelper as LayerHelper
+from paddle.nn import ClipGradByGlobalNorm as ClipGradByGlobalNorm
+from paddle.optimizer import Optimizer as Optimizer
+
+def init_communicator(block, rank, ranks, ring_id): ...
+def broadcast_parameters(block, parameters, ring_id) -> None: ...
+
+class DistributedFusedLamb(Optimizer):
+    helper: Incomplete
+    def __init__(self, learning_rate: float = 0.001, lamb_weight_decay: float = 0.01, beta1: float = 0.9, beta2: float = 0.999, epsilon: float = 1e-06, parameters: Incomplete | None = None, grad_clip: Incomplete | None = None, exclude_from_weight_decay_fn: Incomplete | None = None, clip_after_allreduce: bool = True, is_grad_scaled_by_nranks: bool = True, alignment: int = 128, use_master_param_norm: bool = True, gradient_accumulation_steps: int = 1, use_master_acc_grad: bool = True, nproc_per_node: Incomplete | None = None, use_hierarchical_allreduce: bool = False, name: Incomplete | None = None) -> None: ...
+    def apply_optimize(self, params_grads) -> None: ...
+    def apply_gradients(self, params_grads) -> None: ...

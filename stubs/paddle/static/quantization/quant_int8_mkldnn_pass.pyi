@@ -1,0 +1,6 @@
+from ...base.framework import IrGraph as IrGraph
+from _typeshed import Incomplete
+
+class QuantInt8MkldnnPass:
+    def __init__(self, _scope: Incomplete | None = None, _place: Incomplete | None = None) -> None: ...
+    def apply(self, graph): ...
