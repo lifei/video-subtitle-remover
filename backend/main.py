@@ -24,8 +24,9 @@ import multiprocessing
 from shapely.geometry import Polygon
 import time
 from tqdm import tqdm
-from tools.infer import utility
-from tools.infer.predict_det import TextDetector
+
+from paddleocr.tools.infer.predict_det import TextDetector
+from paddleocr.tools.infer import utility
 
 
 class SubtitleDetect:
