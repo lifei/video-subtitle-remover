@@ -5,6 +5,10 @@ import torch
 import logging
 import platform
 import stat
+from fsplit.filesplit import Filesplit
+
+
+torch.backends.cudnn.enabled = False
 
 # ×××××××××××××××××××× [不要改] start ××××××××××××××××××××
 logging.disable(logging.DEBUG)  # 关闭DEBUG日志的打印
@@ -19,23 +23,16 @@ DET_MODEL_BASE = os.path.join(BASE_DIR, "models")
 DET_MODEL_PATH = os.path.join(DET_MODEL_BASE, MODEL_VERSION, "ch_det")
 
 # 查看该路径下是否有模型完整文件，没有的话合并小文件生成完整文件
-"""
-from fsplit.filesplit import Filesplit
-if "big-lama.pt" not in (os.listdir(LAMA_MODEL_PATH)):
-    fs = Filesplit()
-    fs.merge(input_dir=LAMA_MODEL_PATH)
 
-if "inference.pdiparams" not in os.listdir(DET_MODEL_PATH):
-    fs = Filesplit()
-    fs.merge(input_dir=DET_MODEL_PATH)
-
-if "ProPainter.pth" not in os.listdir(VIDEO_INPAINT_MODEL_PATH):
-    fs = Filesplit()
-    fs.merge(input_dir=VIDEO_INPAINT_MODEL_PATH)
-if "ffmpeg.exe" not in os.listdir(os.path.join(BASE_DIR, "", "ffmpeg", "win_x64")):
-    fs = Filesplit()
-    fs.merge(input_dir=os.path.join(BASE_DIR, "", "ffmpeg", "win_x64"))
-"""
+for dir, file in [
+    (LAMA_MODEL_PATH, "big-lama.pt"),
+    (DET_MODEL_PATH, "inference.pdiparams"),
+    (VIDEO_INPAINT_MODEL_PATH, "ProPainter.pth"),
+    (os.path.join(BASE_DIR, "", "ffmpeg", "win_x64"), "ffmpeg.exe"),
+]:
+    if not os.path.exists(os.path.join(dir, file)):
+        fs = Filesplit()
+        fs.merge(dir)
 
 # 指定ffmpeg可执行程序路径
 sys_str = platform.system()

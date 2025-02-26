@@ -16,9 +16,9 @@ import sys
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(__dir__)
-sys.path.insert(0, os.path.abspath(os.path.join(__dir__, '../..')))
+sys.path.insert(0, os.path.abspath(os.path.join(__dir__, "../..")))
 
-os.environ["FLAGS_allocator_strategy"] = 'auto_growth'
+os.environ["FLAGS_allocator_strategy"] = "auto_growth"
 
 import cv2
 import numpy as np
@@ -31,6 +31,7 @@ from ppocr.utils.utility import get_image_file_list, check_and_read_gif
 from ppocr.data import create_operators, transform
 from ppocr.postprocess import build_post_process
 import json
+
 logger = get_logger()
 
 
@@ -39,28 +40,27 @@ class TextDetector(object):
         self.args = args
         self.det_algorithm = args.det_algorithm
         self.use_onnx = args.use_onnx
-        pre_process_list = [{
-            'DetResizeForTest': {
-                'limit_side_len': args.det_limit_side_len,
-                'limit_type': args.det_limit_type,
-            }
-        }, {
-            'NormalizeImage': {
-                'std': [0.229, 0.224, 0.225],
-                'mean': [0.485, 0.456, 0.406],
-                'scale': '1./255.',
-                'order': 'hwc'
-            }
-        }, {
-            'ToCHWImage': None
-        }, {
-            'KeepKeys': {
-                'keep_keys': ['image', 'shape']
-            }
-        }]
+        pre_process_list = [
+            {
+                "DetResizeForTest": {
+                    "limit_side_len": args.det_limit_side_len,
+                    "limit_type": args.det_limit_type,
+                }
+            },
+            {
+                "NormalizeImage": {
+                    "std": [0.229, 0.224, 0.225],
+                    "mean": [0.485, 0.456, 0.406],
+                    "scale": "1./255.",
+                    "order": "hwc",
+                }
+            },
+            {"ToCHWImage": None},
+            {"KeepKeys": {"keep_keys": ["image", "shape"]}},
+        ]
         postprocess_params = {}
         if self.det_algorithm == "DB":
-            postprocess_params['name'] = 'DBPostProcess'
+            postprocess_params["name"] = "DBPostProcess"
             postprocess_params["thresh"] = args.det_db_thresh
             postprocess_params["box_thresh"] = args.det_db_box_thresh
             postprocess_params["max_candidates"] = 1000
@@ -68,17 +68,15 @@ class TextDetector(object):
             postprocess_params["use_dilation"] = args.use_dilation
             postprocess_params["score_mode"] = args.det_db_score_mode
         elif self.det_algorithm == "EAST":
-            postprocess_params['name'] = 'EASTPostProcess'
+            postprocess_params["name"] = "EASTPostProcess"
             postprocess_params["score_thresh"] = args.det_east_score_thresh
             postprocess_params["cover_thresh"] = args.det_east_cover_thresh
             postprocess_params["nms_thresh"] = args.det_east_nms_thresh
         elif self.det_algorithm == "SAST":
             pre_process_list[0] = {
-                'DetResizeForTest': {
-                    'resize_long': args.det_limit_side_len
-                }
+                "DetResizeForTest": {"resize_long": args.det_limit_side_len}
             }
-            postprocess_params['name'] = 'SASTPostProcess'
+            postprocess_params["name"] = "SASTPostProcess"
             postprocess_params["score_thresh"] = args.det_sast_score_thresh
             postprocess_params["nms_thresh"] = args.det_sast_nms_thresh
             self.det_sast_polygon = args.det_sast_polygon
@@ -91,7 +89,7 @@ class TextDetector(object):
                 postprocess_params["expand_scale"] = 1.0
                 postprocess_params["shrink_ratio_of_width"] = 0.3
         elif self.det_algorithm == "PSE":
-            postprocess_params['name'] = 'PSEPostProcess'
+            postprocess_params["name"] = "PSEPostProcess"
             postprocess_params["thresh"] = args.det_pse_thresh
             postprocess_params["box_thresh"] = args.det_pse_box_thresh
             postprocess_params["min_area"] = args.det_pse_min_area
@@ -99,12 +97,8 @@ class TextDetector(object):
             postprocess_params["scale"] = args.det_pse_scale
             self.det_pse_box_type = args.det_pse_box_type
         elif self.det_algorithm == "FCE":
-            pre_process_list[0] = {
-                'DetResizeForTest': {
-                    'rescale_img': [1080, 736]
-                }
-            }
-            postprocess_params['name'] = 'FCEPostProcess'
+            pre_process_list[0] = {"DetResizeForTest": {"rescale_img": [1080, 736]}}
+            postprocess_params["name"] = "FCEPostProcess"
             postprocess_params["scales"] = args.scales
             postprocess_params["alpha"] = args.alpha
             postprocess_params["beta"] = args.beta
@@ -116,21 +110,21 @@ class TextDetector(object):
 
         self.preprocess_op = create_operators(pre_process_list)
         self.postprocess_op = build_post_process(postprocess_params)
-        self.predictor, self.input_tensor, self.output_tensors, self.config = utility.create_predictor(
-            args, 'det', logger)
+        self.predictor, self.input_tensor, self.output_tensors, self.config = (
+            utility.create_predictor(args, "det", logger)
+        )
 
         if self.use_onnx:
             img_h, img_w = self.input_tensor.shape[2:]
             if img_h is not None and img_w is not None and img_h > 0 and img_w > 0:
                 pre_process_list[0] = {
-                    'DetResizeForTest': {
-                        'image_shape': [img_h, img_w]
-                    }
+                    "DetResizeForTest": {"image_shape": [img_h, img_w]}
                 }
         self.preprocess_op = create_operators(pre_process_list)
 
         if args.benchmark:
             import auto_log
+
             pid = os.getpid()
             gpu_id = utility.get_infer_gpuid()
             self.autolog = auto_log.AutoLogger(
@@ -143,11 +137,10 @@ class TextDetector(object):
                 pids=pid,
                 process_name=None,
                 gpu_ids=gpu_id if args.use_gpu else None,
-                time_keys=[
-                    'preprocess_time', 'inference_time', 'postprocess_time'
-                ],
+                time_keys=["preprocess_time", "inference_time", "postprocess_time"],
                 warmup=2,
-                logger=logger)
+                logger=logger,
+            )
 
     def order_points_clockwise(self, pts):
         rect = np.zeros((4, 2), dtype="float32")
@@ -190,17 +183,19 @@ class TextDetector(object):
 
     def __call__(self, img):
         ori_im = img.copy()
-        data = {'image': img}
+        data = {"image": img}
 
         st = time.time()
 
         if self.args.benchmark:
             self.autolog.times.start()
 
-        data = transform(data, self.preprocess_op)
-        img, shape_list = data
-        if img is None:
-            return None, 0
+        _ = transform(data, self.preprocess_op)
+        if _:
+            img, shape_list = _
+            if img is None:
+                return None, 0
+
         img = np.expand_dims(img, axis=0)
         shape_list = np.expand_dims(shape_list, axis=0)
         img = img.copy()
@@ -210,43 +205,47 @@ class TextDetector(object):
         if self.use_onnx:
             input_dict = {}
             input_dict[self.input_tensor.name] = img
-            outputs = self.predictor.run(self.output_tensors, input_dict)
+            if self.output_tensors:
+                outputs = self.predictor.run(self.output_tensors, input_dict)
         else:
             self.input_tensor.copy_from_cpu(img)
             self.predictor.run()
             outputs = []
-            for output_tensor in self.output_tensors:
-                output = output_tensor.copy_to_cpu()
-                outputs.append(output)
+            if self.output_tensors:
+                for output_tensor in self.output_tensors:
+                    output = output_tensor.copy_to_cpu()
+                    outputs.append(output)
             if self.args.benchmark:
                 self.autolog.times.stamp()
 
         preds = {}
         if self.det_algorithm == "EAST":
-            preds['f_geo'] = outputs[0]
-            preds['f_score'] = outputs[1]
-        elif self.det_algorithm == 'SAST':
-            preds['f_border'] = outputs[0]
-            preds['f_score'] = outputs[1]
-            preds['f_tco'] = outputs[2]
-            preds['f_tvo'] = outputs[3]
-        elif self.det_algorithm in ['DB', 'PSE']:
-            preds['maps'] = outputs[0]
-        elif self.det_algorithm == 'FCE':
+            preds["f_geo"] = outputs[0]
+            preds["f_score"] = outputs[1]
+        elif self.det_algorithm == "SAST":
+            preds["f_border"] = outputs[0]
+            preds["f_score"] = outputs[1]
+            preds["f_tco"] = outputs[2]
+            preds["f_tvo"] = outputs[3]
+        elif self.det_algorithm in ["DB", "PSE"]:
+            preds["maps"] = outputs[0]
+        elif self.det_algorithm == "FCE":
             for i, output in enumerate(outputs):
-                preds['level_{}'.format(i)] = output
+                preds["level_{}".format(i)] = output
         else:
             raise NotImplementedError
 
-        #self.predictor.try_shrink_memory()
-        post_result = self.postprocess_op(preds, shape_list)
-        dt_boxes = post_result[0]['points']
-        if (self.det_algorithm == "SAST" and self.det_sast_polygon) or (
-                self.det_algorithm in ["PSE", "FCE"] and
-                self.postprocess_op.box_type == 'poly'):
-            dt_boxes = self.filter_tag_det_res_only_clip(dt_boxes, ori_im.shape)
-        else:
-            dt_boxes = self.filter_tag_det_res(dt_boxes, ori_im.shape)
+        # self.predictor.try_shrink_memory()
+        if self.postprocess_op:
+            post_result = self.postprocess_op(preds, shape_list)
+            dt_boxes = post_result[0]["points"]
+            if (self.det_algorithm == "SAST" and self.det_sast_polygon) or (
+                self.det_algorithm in ["PSE", "FCE"]
+                and self.postprocess_op.box_type == "poly"
+            ):
+                dt_boxes = self.filter_tag_det_res_only_clip(dt_boxes, ori_im.shape)
+            else:
+                dt_boxes = self.filter_tag_det_res(dt_boxes, ori_im.shape)
 
         if self.args.benchmark:
             self.autolog.times.end(stamp=True)
@@ -279,23 +278,28 @@ if __name__ == "__main__":
             continue
         st = time.time()
         dt_boxes, _ = text_detector(img)
+        if not dt_boxes:
+            continue
         elapse = time.time() - st
         if count > 0:
             total_time += elapse
         count += 1
-        save_pred = os.path.basename(image_file) + "\t" + str(
-            json.dumps([x.tolist() for x in dt_boxes])) + "\n"
+        save_pred = (
+            os.path.basename(image_file)
+            + "\t"
+            + str(json.dumps([x.tolist() for x in dt_boxes]))
+            + "\n"
+        )
         save_results.append(save_pred)
         logger.info(save_pred)
         logger.info("The predict time of {}: {}".format(image_file, elapse))
         src_im = utility.draw_text_det_res(dt_boxes, image_file)
         img_name_pure = os.path.split(image_file)[-1]
-        img_path = os.path.join(draw_img_save,
-                                "det_res_{}".format(img_name_pure))
+        img_path = os.path.join(draw_img_save, "det_res_{}".format(img_name_pure))
         cv2.imwrite(img_path, src_im)
         logger.info("The visualized image saved in {}".format(img_path))
 
-    with open(os.path.join(draw_img_save, "det_results.txt"), 'w') as f:
+    with open(os.path.join(draw_img_save, "det_results.txt"), "w") as f:
         f.writelines(save_results)
         f.close()
     if args.benchmark:
