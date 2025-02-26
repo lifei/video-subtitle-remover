@@ -28,6 +28,10 @@ from tqdm import tqdm
 from paddleocr.tools.infer.predict_det import TextDetector
 from paddleocr.tools.infer import utility
 
+from paddleocr import PaddleOCR
+
+ocr = PaddleOCR()
+
 
 class SubtitleDetect:
     """
@@ -45,8 +49,8 @@ class SubtitleDetect:
         self.sub_area = sub_area
 
     def detect_subtitle(self, img):
-        dt_boxes, elapse = self.text_detector(img)
-        return dt_boxes, elapse
+        s, _ = ocr.text_detector(img)
+        return s
 
     @staticmethod
     def get_coordinates(dt_box):
@@ -58,6 +62,9 @@ class SubtitleDetect:
         coordinate_list = list()
         if isinstance(dt_box, list):
             for i in dt_box:
+                if i is None:
+                    print(dt_box)
+                    continue
                 i = list(i)
                 (x1, y1) = int(i[0][0]), int(i[0][1])
                 (x2, y2) = int(i[1][0]), int(i[1][1])
@@ -90,7 +97,7 @@ class SubtitleDetect:
                 break
             # 读取视频帧成功
             current_frame_no += 1
-            dt_boxes, _ = self.detect_subtitle(frame)
+            dt_boxes = self.detect_subtitle(frame)
             if dt_boxes is None:
                 continue
             coordinate_list = self.get_coordinates(dt_boxes.tolist())
